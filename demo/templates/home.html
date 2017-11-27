@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="jumbotron">
+            <div>
+                <h1>Hello</h1>
+                <p>You are on your Dashboard</p>
+              {{ user }}
+              {% if user.is_anonymous %}
+              <a href="{% url 'django.contrib.auth.views.login' %}">login</a>
+              {% else %}
+              <a href="{% url 'django.contrib.auth.views.logout' %}">logout</a>
+              {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

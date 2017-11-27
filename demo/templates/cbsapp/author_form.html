@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form method="post" action="{% url 'author-add' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input class="btn btn-success btn-sm" type="submit" value="保存"/>
+</form>
+
+{% endblock %}

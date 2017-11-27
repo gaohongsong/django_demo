@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <ol>
+    {% for book in book_list %}
+        <li>{{ book.title }}</li>
+    {% endfor %}
+    </ol>
+{% endblock %}
