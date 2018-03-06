@@ -28,4 +28,7 @@ urlpatterns = format_suffix_patterns([
     url(r'^snippets/$', views_cbv.SnippetList.as_view(), name='snippet-list'),
     url(r'^snippets/(?P<pk>[0-9]+)/$', views_cbv.SnippetDetail.as_view(), name='snippet-detail'),
     url(r'^snippets/(?P<pk>[0-9]+)/highlight/$', views_cbv.SnippetHighlight.as_view()),
+
+    url(r'^snippets1/$', views_cbv.SnippetList1.as_view(), name='snippet-list'),
+    url(r'^snippets1/(?P<pk>[0-9]+)/$', views_cbv.SnippetDetail1.as_view(), name='snippet-detail'),
 ])
