@@ -14,6 +14,7 @@ from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
 #     linenos = serializers.BooleanField(required=False)
 #     language = serializers.ChoiceField(choices=LANGUAGE_CHOICES, default='python')
 #     style = serializers.ChoiceField(choices=STYLE_CHOICES, default='friendly')
+#     owner = PrimaryKeyRelatedField(queryset=User.objects.all())
 #
 #     def create(self, validated_data):
 #         """创建并返回snippets实例"""
@@ -24,6 +25,7 @@ from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
 #         """更新snippet实例，并返回"""
 #
 #         print 'SnippetSerializer.update'
+#         instance.owner_id = validated_data.get('title', instance.owner_id)
 #         instance.title = validated_data.get('title', instance.title)
 #         instance.code = validated_data.get('title', instance.code)
 #         instance.linenos = validated_data.get('title', instance.linenos)
@@ -33,13 +35,16 @@ from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
 #
 #         return instance
 
-# class SnippetSerializer(serializers.ModelSerializer):
-#     owner = serializers.ReadOnlyField(source='owner.username')
-#     # owner = serializers.CharField(source='owner.username', read_only=True)
-#
-#     class Meta:
-#         model = Snippet
-#         fields = ('id', 'title', 'code', 'linenos', 'language', 'style', 'owner')
+class SnippetSerializer(serializers.ModelSerializer):
+    username = serializers.ReadOnlyField(source='owner.username', required=False)
+    date_joined = serializers.DateTimeField(source='owner.date_joined', format="%Y-%m-%d %H:%M:%S", required=False)
+    # owner = serializers.CharField(source='owner.username', read_only=True)
+
+    class Meta:
+        model = Snippet
+        # fields = '__all__'
+        # exclude = ('title',)
+        fields = ('id', 'title', 'code', 'linenos', 'language', 'style', 'username', 'date_joined')
 
 
 # class UserSerializer(serializers.ModelSerializer):
@@ -49,18 +54,19 @@ from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
 #         model = User
 #         fields = ('id', 'url', 'username', 'snippets')
 
-class SnippetSerializer(serializers.HyperlinkedModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
-    highlight = serializers.HyperlinkedIdentityField(view_name='snippet-highlight', format='html')
-
-    class Meta:
-        model = Snippet
-        fields = ('id', 'url', 'highlight', 'code', 'title',
-                  'linenos', 'language', 'style', 'owner')
+# class SnippetSerializer(serializers.HyperlinkedModelSerializer):
+#     owner = serializers.ReadOnlyField(source='owner.username')
+#     highlight = serializers.HyperlinkedIdentityField(view_name='snippet-highlight', format='html')
+#
+#     class Meta:
+#         model = Snippet
+#         fields = ('id', 'url', 'highlight', 'code', 'title',
+#                   'linenos', 'language', 'style', 'owner')
 
 
 class UserSerializer(serializers.ModelSerializer):
-    snippets = serializers.HyperlinkedRelatedField(many=True, view_name="snippet-detail", queryset=Snippet.objects.all())
+    snippets = serializers.HyperlinkedRelatedField(many=True, view_name="snippet-detail",
+                                                   queryset=Snippet.objects.all())
 
     class Meta:
         model = User

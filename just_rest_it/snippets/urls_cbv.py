@@ -16,20 +16,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
-from snippets import views
+from rest_framework.urlpatterns import format_suffix_patterns
 
-from rest_framework.routers import DefaultRouter
-from rest_framework.schemas import SchemaGenerator
+from snippets import views_cbv
 
-# 注册viewsets到路由
-router = DefaultRouter()
-router.register(r'snippets', views.SnippetViewSet)
-router.register(r'users', views.UserViewSet)
+# 手动自定义路由
+urlpatterns = format_suffix_patterns([
+    url(r'^users/$', views_cbv.UserList.as_view()),
+    url(r'users/(?P<pk>\d+)/$', views_cbv.UserDetail.as_view()),
 
-schema_view = SchemaGenerator(title='Miya API')
-
-urlpatterns = [
-    url(r'^$', views.api_root),
-    url(r'^', include(router.urls)),
-    # url(r'^schema/$', schema_view),
-]
+    url(r'^snippets/$', views_cbv.SnippetList.as_view(), name='snippet-list'),
+    url(r'^snippets/(?P<pk>[0-9]+)/$', views_cbv.SnippetDetail.as_view(), name='snippet-detail'),
+    url(r'^snippets/(?P<pk>[0-9]+)/highlight/$', views_cbv.SnippetHighlight.as_view()),
+])

@@ -24,7 +24,8 @@ router.register(r'users', UserViewSet)
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     # url(r'^', include(router.urls)),
-    url(r'^', include('snippets.urls')),
+    # url(r'^', include('snippets.urls_fbv')),
+    url(r'^', include('snippets.urls_cbv')),
 ]

@@ -28,6 +28,9 @@ class Snippet(models.Model):
     owner = models.ForeignKey('auth.User', related_name='snippets', on_delete=models.CASCADE)
     highlighted = models.TextField(u'高亮')
 
+    def get_language(self):
+        return self.language
+
     def save(self, *args, **kwargs):
         """
         Use the `pygments` library to create a highlighted HTML
@@ -38,6 +41,9 @@ class Snippet(models.Model):
         options = self.title and {'title': self.title} or {}
         formatter = HtmlFormatter(style=self.style, linenos=linenos, full=True, **options)
         self.highlighted = highlight(self.code, lexer, formatter)
+        if self.owner_id is None:
+            self.owner_id = 1
+
         super(Snippet, self).save(*args, **kwargs)
 
     class Meta:
