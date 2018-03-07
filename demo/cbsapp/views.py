@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+"""
+说明：这里cbsapp主要用于测试class based views的基本使用方法
+https://docs.djangoproject.com/en/1.8/ref/class-based-views/flattened-index/
+"""
 from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.views import redirect_to_login
@@ -159,12 +163,25 @@ class AuthorCreate(generic.CreateView):
 class AuthUpdate(generic.UpdateView):
     model = Author
     fields = ('salutation', 'name', 'email')
+    template_name_suffix = '_update_form'
     # user model's get_absolute_url as success_url
 
 
 class AuthDelete(generic.DeleteView):
     model = Author
     success_url = reverse_lazy('author-list')
+
+
+class AuthView(generic.FormView):
+    template_name = 'cbsapp/author.html'
+    form_class = AuthorForm
+    success_url = '/cbs/thanks/'
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+        form.send_email()
+        return super(AuthView, self).form_valid(form)
 
 
 # json mixin

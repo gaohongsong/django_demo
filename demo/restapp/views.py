@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+restapp主要用于restframework特性的测试
+"""
 
 from django.contrib.auth.models import User
 from rest_framework import viewsets
@@ -25,6 +28,7 @@ class UserViewSet(viewsets.ViewSet):
         user = get_object_or_404(users, pk=pk)
         serializer = UserSerializer(user)
         return Response(serializer.data)
+
 
 # 从类视图转换到函数视图
 user_list = UserViewSet.as_view({'get': 'list'})

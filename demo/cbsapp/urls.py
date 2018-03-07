@@ -14,6 +14,8 @@ urlpatterns = patterns(
     url(r'permission/', permission_required('is_superuser')(TemplateView.as_view(template_name='secret.html'))),
     url(r'publishers/', v.PublisherList.as_view()),
     url(r'books/([\w-]+)/$', v.PubBookList.as_view()),
+    url(r'author/$', v.AuthView.as_view(), name='author'),
+    url(r'thanks/', TemplateView.as_view(template_name='thanks.html')),
     url(r'authors/$', v.AuthorList.as_view(), name='author-list'),
     url(r'authors/(?P<pk>[0-9]+)/$', v.AuthorDetailView.as_view(), name='author-detail'),
     url(r'authors/add/$', v.AuthorCreate.as_view(), name='author-add'),

@@ -17,3 +17,6 @@ class AuthorForm(forms.ModelForm):
         model = Author
         # fields = '__all__'
         fields = ('salutation', 'name', 'email')
+
+    def send_email(self):
+        print 'send_email'
