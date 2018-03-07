@@ -36,16 +36,16 @@ from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
 #         return instance
 
 class SnippetSerializer(serializers.ModelSerializer):
-    username = serializers.ReadOnlyField(source='owner.username', required=False)
-    date_joined = serializers.DateTimeField(source='owner.date_joined', format="%Y-%m-%d %H:%M:%S", required=False)
-    # owner = serializers.CharField(source='owner.username', read_only=True)
+    # username = serializers.ReadOnlyField(source='owner.username', required=False)
+    # date_joined = serializers.DateTimeField(source='owner.date_joined', format="%Y-%m-%d %H:%M:%S", required=False)
+    owner = serializers.CharField(source='owner.username', read_only=True)
 
     class Meta:
         model = Snippet
         # fields = '__all__'
         # exclude = ('title',)
-        fields = ('id', 'title', 'code', 'linenos', 'language', 'style', 'username', 'date_joined')
-
+        fields = ('id', 'title', 'code', 'linenos', 'language', 'style', 'owner')
+        # fields = ('id', 'title', 'code', 'linenos', 'language', 'style', 'username', 'date_joined')
 
 # class UserSerializer(serializers.ModelSerializer):
 #     snippets = serializers.PrimaryKeyRelatedField(many=True, queryset=Snippet.objects.all())

@@ -67,27 +67,9 @@ class SnippetDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# ===========================================XXXAPIView======================================================
-
-class SnippetList1(generics.ListCreateAPIView):
-    queryset = Snippet.objects.all()
-    serializer_class = SnippetSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
-
-class SnippetDetail1(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Snippet.objects.all()
-    serializer_class = SnippetSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly)
-
-
 # ===============================================GenericAPIView+Mixin========================================
 
-class SnippetList2(mixins.ListModelMixin,
+class SnippetList1(mixins.ListModelMixin,
                    mixins.CreateModelMixin,
                    generics.GenericAPIView):
     queryset = Snippet.objects.all()
@@ -100,7 +82,7 @@ class SnippetList2(mixins.ListModelMixin,
         return self.create(request, *args, **kwargs)
 
 
-class SnippetDetail2(mixins.RetrieveModelMixin,
+class SnippetDetail1(mixins.RetrieveModelMixin,
                      mixins.UpdateModelMixin,
                      mixins.DestroyModelMixin,
                      generics.GenericAPIView):
@@ -124,6 +106,24 @@ class SnippetHighlight(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
         snippet = self.get_object()
         return Response(snippet.highlighted)
+
+
+# ===========================================XXXAPIView======================================================
+
+class SnippetList2(generics.ListCreateAPIView):
+    queryset = Snippet.objects.all()
+    serializer_class = SnippetSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+class SnippetDetail1(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Snippet.objects.all()
+    serializer_class = SnippetSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly)
 
 
 class UserList(generics.ListAPIView):
