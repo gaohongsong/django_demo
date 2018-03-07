@@ -29,7 +29,6 @@ router.register(r'users', views.UserViewSet)
 schema_view = SchemaGenerator(title='Miya API')
 
 urlpatterns = [
-    url(r'^$', views.api_root),
     url(r'^', include(router.urls)),
     # url(r'^schema/$', schema_view),
 ]

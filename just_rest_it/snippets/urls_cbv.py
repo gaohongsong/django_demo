@@ -22,13 +22,20 @@ from snippets import views_cbv
 
 # 手动自定义路由
 urlpatterns = format_suffix_patterns([
-    url(r'^users/$', views_cbv.UserList.as_view()),
-    url(r'users/(?P<pk>\d+)/$', views_cbv.UserDetail.as_view()),
+    url(r'^$', views_cbv.api_root),
 
-    url(r'^snippets/$', views_cbv.SnippetList.as_view(), name='snippet-list'),
+    url(r'^users/$', views_cbv.UserList.as_view(), name='user-list'),
+    url(r'users/(?P<pk>\d+)/$', views_cbv.UserDetail.as_view(), name='user-detail'),
+
+    url(r'^snippets/$', views_cbv.SnippetList.as_view()),
     url(r'^snippets/(?P<pk>[0-9]+)/$', views_cbv.SnippetDetail.as_view(), name='snippet-detail'),
-    url(r'^snippets/(?P<pk>[0-9]+)/highlight/$', views_cbv.SnippetHighlight.as_view()),
 
-    url(r'^snippets1/$', views_cbv.SnippetList1.as_view(), name='snippet-list'),
-    url(r'^snippets1/(?P<pk>[0-9]+)/$', views_cbv.SnippetDetail1.as_view(), name='snippet-detail'),
+    url(r'^snippets1/$', views_cbv.SnippetList1.as_view()),
+    url(r'^snippets1/(?P<owner>.+)/$', views_cbv.SnippetList1.as_view()),
+    url(r'^snippets2/$', views_cbv.SnippetList2.as_view(), name='snippet-list'),
+
+    url(r'^snippets1/(?P<pk>[0-9]+)/$', views_cbv.SnippetDetail1.as_view()),
+    url(r'^snippets2/(?P<pk>[0-9]+)/$', views_cbv.SnippetDetail2.as_view()),
+
+    url(r'^snippets/(?P<pk>[0-9]+)/highlight/$', views_cbv.SnippetHighlight.as_view(), name='snippet-highlight'),
 ])

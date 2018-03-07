@@ -1,24 +1,33 @@
 # -*- coding:utf-8 -*-
+
+"""
+ViewSetMixin + views.APIView = ViewSet
+generics.GenericAPIView + ViewSetMixin          => GenericViewSet +
+                   mixins.CreateModelMixin,
+                   mixins.RetrieveModelMixin,
+                   mixins.UpdateModelMixin,
+                   mixins.DestroyModelMixin,
+                   mixins.ListModelMixin        => ModelViewSet
+
+    # bind actions to http method
+    user_list = UserViewSet.as_view({'get': 'list'})
+    user_detail = UserViewSet.as_view({'get': 'retrieve'})
+
+    # or register the viewset with a router
+
+    router = DefaultRouter()
+    router.register(r'users', UserViewSet, 'user')
+    urlpatterns = router.urls
+"""
 from django.contrib.auth.models import User
 
 from rest_framework import permissions, renderers, viewsets
-from rest_framework.decorators import api_view, permission_classes, detail_route
-from rest_framework.permissions import AllowAny
-from rest_framework.reverse import reverse
+from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 
 from snippets.models import Snippet
 from snippets.serializers import SnippetSerializer, UserSerializer
 from snippets.permissions import IsOwnerOrReadOnly
-
-
-@api_view(['GET'])
-@permission_classes((AllowAny,))
-def api_root(request, format=None):
-    return Response({
-        'users': reverse('user-list', request=request, format=format),
-        'snippets': reverse('snippet-list', request=request, format=format)
-    })
 
 
 class SnippetViewSet(viewsets.ModelViewSet):
@@ -37,6 +46,7 @@ class SnippetViewSet(viewsets.ModelViewSet):
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    """内置List/Detail视图"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
