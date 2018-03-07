@@ -3,7 +3,6 @@
     CBV - class based view
     在DRF中使用类式视图的样例
 """
-import django_filters
 from django.http import Http404
 from django.contrib.auth.models import User
 
@@ -14,7 +13,9 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
+import django_filters
 from snippets.filters import SnippetFilter
+
 from snippets.models import Snippet
 from snippets.serializers import SnippetSerializer, UserSerializer, SnippetSerializer1
 from snippets.permissions import IsOwnerOrReadOnly
@@ -35,6 +36,7 @@ class SnippetList(APIView):
     查询snippets列表
     创建snippet
     """
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
 
     def get(self, request, format=None):
         snippets = Snippet.objects.all()
@@ -118,9 +120,17 @@ class SnippetList1(mixins.ListModelMixin,
     # 默认返回全部数据，这个不满足常见的场景
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
+
+    # 可以利用django_filter对url参数进行过滤
     # filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
-    filter_class = SnippetFilter
-    # filter_fields = ('language',)
+    # filter_class = SnippetFilter
+    # filter_fields = ('language', )
+    filter_fields = {
+        'language': ['exact', 'contains'],
+        'id': ['gt', 'lt'],
+        'owner__username': ['exact'],
+    }
+    search_fields = ('title', 'code')
 
     # def get_queryset(self):
     #     """
@@ -147,8 +157,12 @@ class SnippetList1(mixins.ListModelMixin,
 
 # 简便写法：列表+新增
 class SnippetList2(generics.ListCreateAPIView):
+    """
+    SnippetList2等价于SnippetList1的实现方式（事实上就是这么混入实现的）
+    直接使用绑定了http请求方法的视图类：generics.XXXAPIView
+    有点在于节省了拼装的成本，通过直接继承常用的几种类图，快速实现常规CURD接口
+    """
     queryset = Snippet.objects.all()
-    # serializer_class = SnippetSerializer
     serializer_class = SnippetSerializer1
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
 

@@ -16,6 +16,8 @@ class SnippetFilter(django_filters.FilterSet):
             'id': ['gt', 'lt'],
         }
         http://localhost:8000/snippets1.json?language=abap&id__gt=1
+        # 支持外键：
+        http://localhost:8000/snippets1.json?language__contains=python&owner__username=hongsong
     """
 
     @property
@@ -30,4 +32,5 @@ class SnippetFilter(django_filters.FilterSet):
         fields = {
             'language': ['exact', 'contains'],
             'id': ['gt', 'lt'],
+            'owner__username': ['exact'],
         }
