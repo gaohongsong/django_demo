@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """just_rest_it URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -17,17 +19,19 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from rest_framework import routers, serializers, viewsets
-from rest_app.views import UserViewSet
+from snippets.views import UserViewSet, SnippetViewSet
 
 router = routers.DefaultRouter()
-router.register(r'users', UserViewSet)
+router.register(prefix=r'users', viewset=UserViewSet, base_name='users')
+router.register(r'snippets', SnippetViewSet)
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    # Login Api Required
+    # 提供rest-api登录入口
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    # url(r'^', include(router.urls)),
+    url(r'^', include(router.urls)),
+    # 测试cbv写法
+    # url(r'^', include('snippets.urls_cbv')),
+    # 测试fbv写法
     # url(r'^', include('snippets.urls_fbv')),
-
-    url(r'^', include('snippets.urls_cbv')),
 ]

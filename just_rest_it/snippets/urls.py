@@ -16,19 +16,29 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
-from snippets import views
 
 from rest_framework.routers import DefaultRouter
 from rest_framework.schemas import SchemaGenerator
 
+from snippets import views
+
 # 注册viewsets到路由
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=True)
+
 router.register(r'snippets', views.SnippetViewSet)
 router.register(r'users', views.UserViewSet)
 
 schema_view = SchemaGenerator(title='Miya API')
 
+# urlpatterns = [
+#     url(r'^', include(router.urls)),
+#     url(r'^schema/$', schema_view),
+# ]
+
 urlpatterns = [
-    url(r'^', include(router.urls)),
-    # url(r'^schema/$', schema_view),
+    url(r'^snippets/$', views.snippet_list),
+    url(r'^snippets/highlight/(?P<pk>[0-9]+)/$', views.snippet_list),
+    url(r'^snippets/(?P<pk>[0-9]+)/$', views.snippet_detail),
+    url(r'^users/$', views.user_list),
+    url(r'^users/(?P<pk>[0-9]+)/$', views.snippet_detail),
 ]
